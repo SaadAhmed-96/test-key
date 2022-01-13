@@ -1,0 +1,38 @@
+.column-text-holder
+{
+	margin: auto;
+}
+
+.multi-column p:last-child, .column-holder p:last-child
+{
+	margin-bottom: 0;
+}
+
+.infoPage_whiteBG .column-holder p
+{
+	margin-bottom: 0;
+}
+
+.column-holder ul, .column-holder ol,
+.multi-column-holder ul, .multi-column-holder ol
+{
+	margin: 0 0 20px;
+	padding: 0 0 0 10px;
+	list-style: outside;
+}
+
+.column-holder ol, .multi-column-holder ol
+{
+	list-style-type: decimal;
+	padding-left: 15px;
+}
+
+@media screen and (max-width: 768px) {
+
+	.column-holder ul, .column-holder ol,
+	.multi-column-holder ul, .multi-column-holder ol
+	{
+		padding-left: 17px;
+	}
+
+}

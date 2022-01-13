@@ -1,0 +1,56 @@
+/*
+Theme Name:Hullabaloo Client Theme
+Theme URI: https://hullabaloo.co.uk/
+Version: 1.0
+Description: An example child theme that can be used as a starting point for custom development.
+Author: Hullabaloo Visusal Commuications
+Author URI: https://hullabaloo.co.uk/
+Text Domain: hullabaloo-client-theme
+template: bb-theme
+*/
+
+/* HULLABALOO BASICS */
+p#BuiltByHullabaloo
+{
+	font-size: 12px;
+	text-align: right;
+	width: 100%;
+	margin: 0;
+	color: #adadad;
+
+	a
+	{
+		color: inherit;
+		text-decoration: none;
+
+		&:hover
+		{
+			color: #FFF;
+		}
+	}
+
+	span.hulla
+	{
+		color: #FFF;
+	}
+
+	span.star
+	{
+		color: #fc0;
+	}
+}
+
+/* END ::: HULLABALOO BASICS */
+
+/* SITE MISC */
+.no_margin_para p
+{
+	p
+	{
+		margin: 0;
+	}
+}
+
+/* END ::: SITE MISC */
+
+/* Add your custom styles here... */ 

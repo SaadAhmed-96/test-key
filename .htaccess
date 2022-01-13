@@ -1,0 +1,121 @@
+RewriteEngine On
+RewriteRule ^.well-known/acme-challenge - [L]
+
+## Force HTTPS (Cloudways version)
+#RewriteCond %{HTTP:X-Forwarded-Proto} !https
+#RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+## X-XSS-Protection
+header always set x-xss-protection "1; mode=block"
+
+## X-Frame-Options
+header always set x-frame-options "SAMEORIGIN"
+
+## X-Content-Type-Options
+header always set X-Content-Type-Options "nosniff"
+
+## Strict Transport Security
+header set Strict-Transport-Security "max-age=31536000" env=HTTPS
+
+## Referrer Policy
+Header always set Referrer-Policy "same-origin"
+
+
+# BEGIN WordPress
+# The directives (lines) between "BEGIN WordPress" and "END WordPress" are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress
+
+# REMOVE SERVER SIGNATURE
+ServerSignature Off
+
+# BLOCK ACCESS TO DIRECTORIES WITHOUT A DEFAULT DOCUMENT
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# BLOCK ACCESS TO ANY SOURCE FILES
+<FilesMatch "(^#.*#|\.(bak|config|dist|fla|inc|ini|log|psd|sh|sql|sw[op])|~)$">
+    Order allow,deny
+    Deny from all
+    Satisfy All
+</FilesMatch>
+
+
+# DISABLE XML-RPC
+<files xmlrpc.php>
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</files>
+
+# STRONG HTACCESS PROTECTION (PROTECTS THIS FILE FROM HACKERS)
+<Files ~ "^.*\.([Hh][Tt][Aa])">
+  order allow,deny
+  deny from all
+  satisfy all
+</Files>
+
+
+# PREVENT WORDPRESS VERSION EXPOSURE IN README.HTML
+<files readme.html>
+  Deny from all
+</files>
+
+
+# BLOCK ACCESS TO HIDDEN FILES & DIRECTORIES
+<IfModule mod_rewrite.c>
+  RewriteCond %{SCRIPT_FILENAME} -d [OR]
+  RewriteCond %{SCRIPT_FILENAME} -f
+  RewriteRule "(^|/)\." - [F]
+</IfModule>
+
+# DISABLE ACCESS TO WORDPRESS WP-CONFIG FILE
+<files wp-config.php>
+  order allow,deny
+  deny from all
+</files>
+
+# DISABLE ACCESS TO SFTP-CONFIG.JSON
+<files sftp-config.json>
+  order allow,deny
+  deny from all
+</files>
+
+
+# DISABLE ACCESS TO INCLUDES.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^wp-admin/includes/ - [F,L]
+  RewriteRule !^wp-includes/ - [S=3]
+  RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]
+  RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]
+  RewriteRule ^wp-includes/theme-compat/ - [F,L]
+</IfModule>
+
+# BLOCK BROWSER ACCESS TO LOG FILES
+<Files  ~ "\.log$">
+  Order allow,deny
+  Deny from all
+</Files>
+
+
+# STOP WORDPRESS USERNAME ENUMERATION VULNERABILITY
+RewriteCond %{QUERY_STRING} author=\d
+RewriteRule ^ /? [L,R=301]
